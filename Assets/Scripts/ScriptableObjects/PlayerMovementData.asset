@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4900a616f70d804f98f1a63d9a8ccd6, type: 3}
+  m_Name: PlayerMovementData
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  runSpeed: 8
+  acceleration: 10
+  deceleration: 10
+  airControlFactor: 0.5
+  groundCheckDistance: 0.1
+  coyoteTime: 0.2
+  jumpBufferTime: 0.2
+  jumpForce: 10
+  maxJumps: 2
