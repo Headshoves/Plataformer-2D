@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4c3e40fa-9c8e-4684-96ba-6adeb85f39b1" name="Changes" comment="" />
+    <list default="true" id="4c3e40fa-9c8e-4684-96ba-6adeb85f39b1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Plataformer-2D/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Plataformer-2D/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Enemies/PatrolEnemy.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Enemies/PatrolEnemy.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerHealth.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerHealth.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -93,7 +98,7 @@
       <workItem from="1741834336639" duration="1466000" />
       <workItem from="1741871211283" duration="2104000" />
       <workItem from="1741873362975" duration="546000" />
-      <workItem from="1741873960528" duration="12126000" />
+      <workItem from="1741873960528" duration="14012000" />
     </task>
     <servers />
   </component>

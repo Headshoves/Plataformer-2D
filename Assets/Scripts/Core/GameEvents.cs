@@ -52,6 +52,14 @@ public class GameEvents : MonoBehaviour
         floatEvents[eventName].AddListener(listener);
     }
 
+    public void RemoveListener(string eventName, UnityAction listener)
+    {
+        if (events.ContainsKey(eventName))
+        {
+            events[eventName].RemoveListener(listener);
+        }
+    }
+
     private void AddEvent(string eventName)
     {
         if (!events.ContainsKey(eventName))

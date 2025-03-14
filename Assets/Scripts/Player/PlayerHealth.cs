@@ -40,7 +40,23 @@ public class PlayerHealth
         StartInvincibility();
 
         if (currentHealth <= 0)
-            GameEvents.Instance.TriggerEvent("OnPlayerDeath");
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        // Desativa o movimento do jogador
+        var rb = controller.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.isKinematic = true;
+        }
+
+        // Dispara o evento de morte
+        GameEvents.Instance.TriggerEvent("OnPlayerDeath");
     }
 
     public void TakeDamageWithKnockback(int damage, float invincibilityDuration, Vector2 knockbackDirection, float knockbackForce, float knockbackDuration)
