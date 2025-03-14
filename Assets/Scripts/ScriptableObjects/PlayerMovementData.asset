@@ -17,7 +17,7 @@ MonoBehaviour:
   acceleration: 10
   deceleration: 10
   airControlFactor: 0.5
-  groundCheckDistance: 0.1
+  groundCheckDistance: 0.88
   coyoteTime: 0.2
   jumpBufferTime: 0.2
   jumpForce: 10

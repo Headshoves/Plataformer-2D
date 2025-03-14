@@ -21,6 +21,20 @@ public class UIManager : MonoBehaviour
     {
         GameEvents.Instance.AddIntListener("OnScoreChanged", UpdateScore);
         GameEvents.Instance.AddIntListener("OnHealthChanged", UpdateHealth);
+
+        // Busca o player e atualiza os valores iniciais
+        PlayerController player = FindObjectOfType<PlayerController>();
+        if (player != null)
+        {
+            UpdateScore(player.Score);
+            UpdateHealth(player.Health);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerController não encontrado. Valores iniciais da UI não serão atualizados.");
+            UpdateScore(0);
+            UpdateHealth(0);
+        }
     }
 
     /// <summary>

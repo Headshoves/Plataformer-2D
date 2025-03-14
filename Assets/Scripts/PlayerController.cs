@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour
     private PlayerCombat combat;      // Sistema de combate
     private PlayerInput input;        // Sistema de input
     
+    public int Score => score;
+    public int Health => health.CurrentHealth;
+    
     private void Awake()
     {
         movement = new PlayerMovement(this, GetComponent<Rigidbody2D>(), movementData, groundLayer);  // Modificado
@@ -36,6 +39,15 @@ public class PlayerController : MonoBehaviour
         input = new PlayerInput();
         if (uiManager == null)
             uiManager = FindObjectOfType<UIManager>();
+    }
+
+    private void Start()
+    {
+        score = 0;
+        
+        // Dispara os eventos iniciais para atualizar a UI
+        GameEvents.Instance.TriggerEvent("OnScoreChanged", score);
+        GameEvents.Instance.TriggerEvent("OnHealthChanged", health.CurrentHealth);
     }
 
     private void Update()

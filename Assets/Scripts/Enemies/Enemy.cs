@@ -55,9 +55,16 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void TakeDamage()
     {
-        // Usar object pooling ao invés de destruir
-        isDead = true;
-        ObjectPool.Instance.ReturnToPool(gameObject);
+        if (!isDead)
+        {
+            PlayerController player = GameObject.FindObjectOfType<PlayerController>();
+            if (player != null)
+            {
+                player.AddPoints(enemyData.scoreValue);
+            }
+            isDead = true;
+            ObjectPool.Instance.ReturnToPool(gameObject);
+        }
     }
 
     protected virtual void Die()

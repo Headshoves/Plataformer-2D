@@ -79,8 +79,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.3455565, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 2491587035593152947, guid: ec1fa69e0793bf64eacd8b7a4597e384, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -102,10 +102,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8748c28853935544f8c077baf858c3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 100
-  shouldRotate: 1
+  itemName: 
+  description: 
   collectEffect: {fileID: 0}
-  healthValue: 1
+  healAmount: 20
 --- !u!58 &3647289297494975763
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3644f82b09eef194ab0f4fe375914a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 100
-  shouldRotate: 1
+  itemName: 
+  description: 
   collectEffect: {fileID: 0}
   pointsValue: 100

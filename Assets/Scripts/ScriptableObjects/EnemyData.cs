@@ -9,4 +9,5 @@ public class EnemyData : ScriptableObject
     public float stompThreshold = 0.5f;
     public float knockbackForce = 10f;
     public float knockbackDuration = 0.2f;
+    public int scoreValue = 100; // Pontos que o jogador ganha ao derrotar o inimigo
 }
