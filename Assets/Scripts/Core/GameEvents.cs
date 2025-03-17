@@ -33,6 +33,9 @@ public class GameEvents : MonoBehaviour
         AddEvent("OnGamePaused");
         AddEvent("OnGameResumed");
         AddEvent("OnGameOver");
+        AddEvent("OnLevelComplete");
+        AddEvent("OnLastLevelComplete");
+        AddIntEvent("OnLevelLoaded");
     }
 
     public void AddListener(string eventName, UnityAction listener)

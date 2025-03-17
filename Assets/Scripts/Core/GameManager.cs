@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     private GameState currentState;
     public GameState CurrentState => currentState;
 
+    [Tooltip("Número total de fases no jogo (excluindo menu)")]
+    [SerializeField] private int totalLevels = 1;
+
     [Serializable]
     private class GameData
     {
@@ -39,10 +42,30 @@ public class GameManager : MonoBehaviour
 
             savePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
             LoadGame();
+            
+            // Inicializa o nível atual baseado na cena
+            InitializeCurrentLevel();
         }
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void InitializeCurrentLevel()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName.StartsWith("Level_"))
+        {
+            string levelNumber = currentSceneName.Replace("Level_", "");
+            if (int.TryParse(levelNumber, out int level))
+            {
+                gameData.currentLevel = level - 1; // Ajusta para 0-based
+            }
+        }
+        else
+        {
+            gameData.currentLevel = 0;
         }
     }
 
@@ -159,4 +182,58 @@ public class GameManager : MonoBehaviour
         currentState = GameState.MainMenu;
         SceneManager.LoadScene("MainMenu"); // Certifique-se de que esta cena existe
     }
+
+    public void HandleLevelComplete(bool isFinalLevel)
+    {
+        currentState = GameState.LevelComplete;
+        Time.timeScale = 0f;
+        
+        if (isFinalLevel || gameData.currentLevel >= totalLevels - 1)  // -1 porque currentLevel é 0-based
+        {
+            GameEvents.Instance.TriggerEvent("OnLastLevelComplete");
+        }
+        else
+        {
+            // Incrementa após verificar se é o último nível
+            gameData.currentLevel++;
+            SaveGame();
+            GameEvents.Instance.TriggerEvent("OnLevelComplete");
+        }
+
+        Debug.Log($"Level Complete. Current Level: {gameData.currentLevel}");
+    }
+
+    public void LoadNextLevel()
+    {
+        Time.timeScale = 1f;
+        currentState = GameState.Playing;
+        
+        // Calcula próximo nível (1-based para nome da cena)
+        int nextLevelNumber = gameData.currentLevel + 1;
+        
+        if (nextLevelNumber <= totalLevels)
+        {
+            string nextSceneName = $"Level_{nextLevelNumber}";
+            SceneManager.LoadScene(nextSceneName);
+            GameEvents.Instance.TriggerEvent("OnLevelLoaded", nextLevelNumber);
+            Debug.Log($"Loading level: {nextSceneName}");
+        }
+        else
+        {
+            Debug.LogWarning($"Tentando carregar fase inexistente (Level_{nextLevelNumber}). Voltando ao menu.");
+            LoadMainMenu();
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        // Garante que totalLevels seja sempre pelo menos 1
+        if (totalLevels < 1)
+        {
+            totalLevels = 1;
+            Debug.LogWarning("Total de fases não pode ser menor que 1. Valor ajustado automaticamente.");
+        }
+    }
+#endif
 }
