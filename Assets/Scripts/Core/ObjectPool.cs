@@ -3,10 +3,19 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
+    [System.Serializable]
+    public class Pool
+    {
+        public string tag;
+        public GameObject prefab;
+        public int size;
+    }
+
+    [SerializeField] private List<Pool> pools;
     private static ObjectPool instance;
     public static ObjectPool Instance => instance;
 
-    private Dictionary<string, Queue<GameObject>> poolDictionary = new Dictionary<string, Queue<GameObject>>();
+    private Dictionary<string, Queue<GameObject>> poolDictionary;
 
     private void Awake()
     {
@@ -14,6 +23,22 @@ public class ObjectPool : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
+
+        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+
+        foreach (Pool pool in pools)
+        {
+            Queue<GameObject> objectPool = new Queue<GameObject>();
+
+            for (int i = 0; i < pool.size; i++)
+            {
+                GameObject obj = Instantiate(pool.prefab);
+                obj.SetActive(false);
+                objectPool.Enqueue(obj);
+            }
+
+            poolDictionary.Add(pool.tag, objectPool);
+        }
     }
 
     public GameObject SpawnFromPool(GameObject prefab, Vector3 position, Quaternion rotation)

@@ -5,6 +5,18 @@ using UnityEngine;
 /// </summary>
 public class PlayerMovement
 {
+    public enum MovementState
+    {
+        Idle,
+        Walking,
+        Running,
+        Jumping,
+        Falling
+    }
+
+    private MovementState currentState = MovementState.Idle;
+    public MovementState CurrentState => currentState;
+
     // Referências principais
     private PlayerController controller;    // Referência ao controlador principal
     private Rigidbody2D rb;                // Componente físico do jogador
@@ -79,6 +91,7 @@ public class PlayerMovement
     {
         rb.linearVelocity = new Vector2(currentSpeed, rb.linearVelocity.y);
         CheckGround();
+        UpdateMovementState();
     }
 
     private void Flip()
@@ -161,5 +174,22 @@ public class PlayerMovement
     {
         if (jumpBufferCounter > 0f)
             jumpBufferCounter -= Time.deltaTime;
+    }
+
+    private void UpdateMovementState()
+    {
+        if (!isGrounded)
+        {
+            currentState = rb.linearVelocity.y > 0 ? MovementState.Jumping : MovementState.Falling;
+        }
+        else if (Mathf.Abs(currentSpeed) > 0.1f)
+        {
+            currentState = Mathf.Abs(currentSpeed) > data.walkSpeed ? 
+                MovementState.Running : MovementState.Walking;
+        }
+        else
+        {
+            currentState = MovementState.Idle;
+        }
     }
 }

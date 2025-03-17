@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PatrolEnemy
   m_EditorClassIdentifier: 
   damageAmount: 1
-  invincibilityDuration: 3
+  invincibilityDuration: 1
   canBeStomped: 1
   stompThreshold: 0.5
   knockbackForce: 10

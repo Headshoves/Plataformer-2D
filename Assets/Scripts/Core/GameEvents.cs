@@ -28,7 +28,11 @@ public class GameEvents : MonoBehaviour
         AddIntEvent("OnScoreChanged");
         AddIntEvent("OnHealthChanged");
         AddEvent("OnPlayerDeath");
+        AddEvent("OnPlayerFallDeath");  // Novo evento para morte por queda
         AddFloatEvent("OnInvincibilityStarted");
+        AddEvent("OnGamePaused");
+        AddEvent("OnGameResumed");
+        AddEvent("OnGameOver");
     }
 
     public void AddListener(string eventName, UnityAction listener)

@@ -1,178 +1,62 @@
-# Documentação do Projeto Platformer 2D
+# Documentação do Platformer 2D
 
-## 1. Estrutura do Projeto
+## Índice
+1. [Arquitetura do Projeto](#1-arquitetura-do-projeto)
+2. [Sistemas Core](#2-sistemas-core)
+3. [Sistema do Player](#3-sistema-do-player)
+4. [Sistema de Items](#4-sistema-de-items)
+5. [Sistema de UI](#5-sistema-de-ui)
+6. [Inimigos](#6-inimigos)
+7. [Guia de Implementação](#7-guia-de-implementação)
 
-### 1.1 Organização de Pastas
-- `Core/`: Sistemas fundamentais (GameEvents, ObjectPool)
-- `Player/`: Componentes do jogador
-- `Items/`: Sistema de itens coletáveis
-- `Enemies/`: Sistema de inimigos
-- `UI/`: Interface do usuário
-- `ScriptableObjects/`: Dados configuráveis
+## 1. Arquitetura do Projeto
 
-## 2. Sistema do Jogador
-
-### 2.1 Sistema de Input
-O sistema de input é gerenciado pela classe `PlayerInput`:
-
-```csharp
-// Configuração de Input
-MoveInput    -> Horizontal Axis (A/D ou ←/→)
-IsRunning    -> Left Shift
-JumpPressed  -> Space (GetButtonDown)
-JumpReleased -> Space (GetButtonUp)
-JumpHeld     -> Space (GetButton)
+### Estrutura de Pastas
+```
+Assets/Scripts/
+├── Core/               # Sistemas fundamentais
+├── Player/             # Componentes do jogador
+├── Items/             # Sistema de coletáveis
+├── Enemies/           # Sistema de inimigos
+├── UI/                # Interface do usuário
+└── ScriptableObjects/ # Dados configuráveis
 ```
 
-### 2.2 Sistema de Movimento
-Características atualizadas:
-- Multi-raycast para detecção de chão
-- Sistema de buffer de pulo aprimorado
-- Coyote time implementado
-- Controle de velocidade variável
+## 2. Sistemas Core
 
-#### Debug Visual:
-- Raios vermelhos mostram a detecção de chão
-- Três pontos de verificação (esquerda, centro, direita)
+### GameManager
+Responsável pelo controle do estado do jogo e reinicialização.
 
-#### Configuração do MovementData:
+**Implementação:**
+1. Crie um objeto vazio "GameManager" na primeira cena
+2. Adicione o componente `GameManager.cs`
+3. Este objeto será mantido entre cenas (DontDestroyOnLoad)
+
+**Eventos:**
+- `OnPlayerDeath` -> Reinicia o jogo após 1.5 segundos
+
+### GameEvents
+Sistema de eventos global para comunicação entre componentes.
+
+**Implementação:**
+1. Criado automaticamente pelo GameManager
+2. Gerencia eventos do tipo:
+   - Simples (void)
+   - Int (pontuação, vida)
+   - Float (temporizadores)
+
+**Eventos Principais:**
 ```csharp
-walkSpeed = 5f           // Velocidade base
-runSpeed = 8f           // Velocidade de corrida
-acceleration = 10f      // Aceleração
-deceleration = 10f      // Desaceleração
-airControlFactor = 0.5f // Controle no ar
-groundCheckDistance = 0.2f
-coyoteTime = 0.2f
-jumpBufferTime = 0.2f
-jumpForce = 10f
-maxJumps = 2
+OnScoreChanged(int)
+OnHealthChanged(int)
+OnPlayerDeath()
+OnInvincibilityStarted(float)
 ```
 
-### 2.3 Sistema de Vida
-Funcionalidades atualizadas:
-- Sistema de dano com knockback
-- Invencibilidade configurável
-- Sistema de cura
-- Integração com UI
+### ObjectPool
+Sistema de pooling para otimização de objetos frequentemente criados/destruídos.
 
-#### Eventos de Vida:
-```csharp
-OnHealthChanged      // Quando a vida é alterada
-OnPlayerDeath       // Quando o jogador morre
-OnInvincibilityStarted  // Ao iniciar invencibilidade
-```
-
-## 3. Sistema de UI
-
-### 3.1 Configuração do UIManager
-1. Adicione o componente UIManager a um objeto da UI
-2. Configure as referências:
-   - Score Text (TextMeshProUGUI)
-   - Health Text (TextMeshProUGUI)
-
-### 3.2 Eventos da UI
-O UIManager escuta os seguintes eventos:
-```csharp
-OnScoreChanged  -> Atualiza pontuação
-OnHealthChanged -> Atualiza barra de vida
-```
-
-### 3.3 Integração com Itens
-Cada item atualiza a UI através de:
-1. Chamada direta via UIManager
-2. Sistema de eventos (GameEvents)
-
-## 4. Sistema de Itens
-
-### 4.1 Tipos de Itens e Efeitos
-1. HealthItem
-   - Restaura vida
-   - Atualiza UI de vida
-   - Dispara evento OnHealthChanged
-
-2. PointItem
-   - Adiciona pontos
-   - Atualiza UI de score
-   - Dispara evento OnScoreChanged
-
-3. PowerUpItem
-   - Aumenta velocidade temporariamente
-   - Afeta walkSpeed e runSpeed
-   - Restaura valores originais após duração
-
-### 4.2 Implementação de Novos Itens
-```csharp
-public class NewItem : Item
-{
-    public override void OnCollect(PlayerController collector)
-    {
-        // Efeito do item
-        // Atualização da UI
-        // Disparo de eventos
-    }
-}
-```
-
-## 5. Passo a Passo de Implementação
-
-### 5.1 Configuração do Player
-1. Crie um GameObject para o player
-2. Adicione componentes:
-   - Rigidbody2D
-   - BoxCollider2D
-   - PlayerController
-3. Configure LayerMask para ground detection
-4. Ajuste valores no PlayerMovementData
-5. Configure referência do UIManager
-
-### 5.2 Configuração da UI
-1. Crie canvas com UI elements
-2. Adicione TextMeshProUGUI para score e vida
-3. Configure UIManager
-4. Teste eventos de atualização
-
-### 5.3 Configuração de Itens
-1. Crie prefabs para cada tipo de item
-2. Configure colliders como triggers
-3. Adicione scripts específicos
-4. Teste coleta e atualizações na UI
-
-## 6. Debug e Otimização
-
-### 6.1 Debug Visual
-- Raycast ground detection (vermelho)
-- Gizmos para áreas de patrulha
-- Debug.Log para eventos importantes
-
-### 6.2 Checklist de Implementação
-- [ ] Player movement configurado
-- [ ] Ground detection funcionando
-- [ ] Sistema de pulo responsivo
-- [ ] UI atualiza corretamente
-- [ ] Itens funcionando
-- [ ] Eventos disparando apropriadamente
-
-## 7. Sistema de Eventos (GameEvents)
-
-### 7.1 Principais Eventos
-- OnScoreChanged
-- OnHealthChanged
-- OnPlayerDeath
-- OnInvincibilityStarted
-
-### 7.2 Uso:
-```csharp
-// Registrar listener
-GameEvents.Instance.AddListener("EventName", () => { });
-
-// Disparar evento
-GameEvents.Instance.TriggerEvent("EventName");
-```
-
-## 8. Object Pooling
-
-### 8.1 Implementação:
+**Uso:**
 ```csharp
 // Obter objeto
 ObjectPool.Instance.SpawnFromPool(prefab, position, rotation);
@@ -181,24 +65,153 @@ ObjectPool.Instance.SpawnFromPool(prefab, position, rotation);
 ObjectPool.Instance.ReturnToPool(gameObject);
 ```
 
-## 9. Dicas de Otimização
+## 3. Sistema do Player
 
-1. Use Object Pooling para objetos frequentes
-2. Mantenha os ScriptableObjects organizados
-3. Use eventos ao invés de referências diretas
-4. Implemente CullingGroup para inimigos
-5. Configure corretamente as layers de colisão
+### PlayerController
+Componente principal que integra todos os sistemas do jogador.
 
-## 10. Suporte e Manutenção
+**Configuração:**
+1. Crie um objeto para o player
+2. Adicione componentes:
+   - Rigidbody2D (Constraints: Freeze Rotation Z)
+   - BoxCollider2D
+   - PlayerController
+3. Configure ScriptableObjects:
+   - PlayerMovementData
+   - PlayerHealthData
 
-### 10.1 Adicionando Novos Recursos
-1. Planeje a implementação
-2. Crie ScriptableObjects se necessário
-3. Implemente seguindo os padrões existentes
-4. Teste extensivamente
-5. Documente as mudanças
+### PlayerMovementData (ScriptableObject)
+```csharp
+walkSpeed: 5f        // Velocidade base
+runSpeed: 8f         // Velocidade correndo
+acceleration: 20f    // Aceleração
+deceleration: 30f    // Desaceleração
+airControlFactor: 0.5f
+groundCheckDistance: 0.88f
+coyoteTime: 0.2f
+jumpBufferTime: 0.2f
+jumpForce: 10f
+maxJumps: 2
+```
 
-### 10.2 Debug
-- Use Debug.Log para desenvolvimento
-- Implemente Gizmos para visualização
-- Configure corretamente tags e layers
+### PlayerHealthData (ScriptableObject)
+```csharp
+maxHealth: 3
+invincibilityDuration: 2f
+knockbackForce: 10f
+knockbackDuration: 0.2f
+```
+
+## 4. Sistema de Items
+
+### Item Base
+Classe abstrata para todos os coletáveis.
+
+**Para criar novo item:**
+1. Crie script herdando de `Item`
+2. Implemente `OnCollect()`
+3. Configure prefab:
+   - Adicione BoxCollider2D (IsTrigger = true)
+   - Adicione script do item
+   - Configure ItemData
+
+### Tipos de Items
+- **HealthItem**: Restaura vida
+- **PointItem**: Adiciona pontos
+- **InvincibilityItem**: Temporariamente invencível
+- **PowerUpItem**: Boost de velocidade
+
+## 5. Sistema de UI
+
+### UIManager
+Gerencia todos os elementos da interface.
+
+**Configuração:**
+1. Crie Canvas (UI -> Canvas)
+2. Adicione elementos:
+   - Score Text (TextMeshProUGUI)
+   - Health Text (TextMeshProUGUI)
+3. Adicione UIManager ao Canvas
+4. Configure referências no inspector
+
+## 6. Inimigos
+
+### Enemy Base
+Classe base para todos os inimigos.
+
+**Configuração de novo inimigo:**
+1. Crie script herdando de `Enemy`
+2. Configure colliders:
+   - mainCollider (lateral)
+   - topCollider (stomping)
+3. Configure EnemyData ScriptableObject
+
+### PatrolEnemy
+Exemplo de inimigo que patrulha área.
+
+**Configuração:**
+```csharp
+moveSpeed: 2f
+patrolDistance: 3f
+groundLayer: (LayerMask)
+```
+
+## 7. Guia de Implementação
+
+### Configuração Inicial
+1. Crie cena nova
+2. Adicione GameManager
+3. Configure Layers:
+   - Ground
+   - Player
+   - Enemy
+
+### Player Setup
+1. Configure player prefab
+2. Crie ScriptableObjects:
+   ```
+   Create -> Game/Player/Movement Data
+   Create -> Game/Player/Health Data
+   ```
+3. Configure valores nos ScriptableObjects
+4. Atribua referências no inspector
+
+### Sistema de Items
+1. Configure prefabs para cada tipo
+2. Crie ItemData para cada tipo:
+   ```
+   Create -> Game/Item Data/Health Item
+   Create -> Game/Item Data/Point Item
+   Create -> Game/Item Data/Invincibility Item
+   ```
+
+### UI Setup
+1. Configure Canvas
+2. Adicione TextMeshPro (se necessário)
+3. Configure UIManager
+4. Teste atualizações de UI
+
+### Checklist Final
+- [ ] GameManager na cena
+- [ ] Player configurado
+- [ ] Layers configuradas
+- [ ] ScriptableObjects criados
+- [ ] UI funcionando
+- [ ] Sistema de items testado
+- [ ] Inimigos posicionados
+- [ ] Cena adicionada ao Build Settings
+
+### Debug Tools
+- Gizmos para visualização de:
+  - Área de patrulha (inimigos)
+  - Ground check (player)
+  - Colliders (debug mode)
+
+### Dicas de Otimização
+1. Use Object Pooling para:
+   - Efeitos de partículas
+   - Projéteis
+   - Items coletáveis
+2. Configure corretamente as collision layers
+3. Use eventos ao invés de GetComponent frequente
+4. Mantenha ScriptableObjects organizados
