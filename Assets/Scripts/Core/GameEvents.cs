@@ -10,6 +10,7 @@ public class GameEvents : MonoBehaviour
     private Dictionary<string, UnityEvent> events;
     private Dictionary<string, UnityEvent<int>> intEvents;
     private Dictionary<string, UnityEvent<float>> floatEvents;
+    private Dictionary<string, UnityEvent<InfoBoardData>> infoBoardEvents;
 
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class GameEvents : MonoBehaviour
         events = new Dictionary<string, UnityEvent>();
         intEvents = new Dictionary<string, UnityEvent<int>>();
         floatEvents = new Dictionary<string, UnityEvent<float>>();
+        infoBoardEvents = new Dictionary<string, UnityEvent<InfoBoardData>>();
 
         InitializeEvents();
     }
@@ -36,6 +38,8 @@ public class GameEvents : MonoBehaviour
         AddEvent("OnLevelComplete");
         AddEvent("OnLastLevelComplete");
         AddIntEvent("OnLevelLoaded");
+        AddEvent("OnInfoBoardShow");
+        AddEvent("OnInfoBoardClose");
     }
 
     public void AddListener(string eventName, UnityAction listener)
@@ -59,11 +63,30 @@ public class GameEvents : MonoBehaviour
         floatEvents[eventName].AddListener(listener);
     }
 
+    public void AddListener<T>(string eventName, UnityAction<T> listener) where T : ScriptableObject
+    {
+        if (typeof(T) == typeof(InfoBoardData))
+        {
+            if (!infoBoardEvents.ContainsKey(eventName))
+                infoBoardEvents[eventName] = new UnityEvent<InfoBoardData>();
+            infoBoardEvents[eventName].AddListener(listener as UnityAction<InfoBoardData>);
+        }
+    }
+
     public void RemoveListener(string eventName, UnityAction listener)
     {
         if (events.ContainsKey(eventName))
         {
             events[eventName].RemoveListener(listener);
+        }
+    }
+
+    public void RemoveListener<T>(string eventName, UnityAction<T> listener) where T : ScriptableObject
+    {
+        if (typeof(T) == typeof(InfoBoardData))
+        {
+            if (infoBoardEvents.ContainsKey(eventName))
+                infoBoardEvents[eventName].RemoveListener(listener as UnityAction<InfoBoardData>);
         }
     }
 
@@ -101,5 +124,11 @@ public class GameEvents : MonoBehaviour
     {
         if (floatEvents.ContainsKey(eventName))
             floatEvents[eventName].Invoke(value);
+    }
+
+    public void TriggerEvent(string eventName, InfoBoardData data)
+    {
+        if (infoBoardEvents.ContainsKey(eventName))
+            infoBoardEvents[eventName].Invoke(data);
     }
 }

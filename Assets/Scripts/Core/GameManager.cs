@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using System.IO;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class GameManager : MonoBehaviour
 
     private GameData gameData = new GameData();
     private string savePath;
+
+    private GameState previousState;
+    private bool isShowingInfoBoard = false;
 
     private void Awake()
     {
@@ -222,6 +226,42 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning($"Tentando carregar fase inexistente (Level_{nextLevelNumber}). Voltando ao menu.");
             LoadMainMenu();
+        }
+    }
+
+    public void ShowInfoBoard(InfoBoardData data)
+    {
+        if (currentState != GameState.Playing) return;
+        
+        previousState = currentState;
+        currentState = GameState.Paused;
+        isShowingInfoBoard = true;
+        Time.timeScale = 0f;
+        GameEvents.Instance.TriggerEvent("OnInfoBoardShow", data);
+    }
+
+    public void CloseInfoBoard()
+    {
+        if (!isShowingInfoBoard) return;
+        
+        isShowingInfoBoard = false;
+        StartCoroutine(ResumeAfterDelay());
+        GameEvents.Instance.TriggerEvent("OnInfoBoardClose");
+    }
+
+    private IEnumerator ResumeAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.1f); // Pequeno delay
+        Time.timeScale = 1f;
+        currentState = previousState;
+    }
+
+    public void Update()
+    {
+        if (isShowingInfoBoard && 
+            (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Submit")))
+        {
+            CloseInfoBoard();
         }
     }
 

@@ -12,6 +12,17 @@ public class PlayerInput
 
     public void ProcessInput()
     {
+        // Não processa inputs se o jogo estiver pausado
+        if (GameManager.Instance.CurrentState != GameState.Playing)
+        {
+            MoveInput = 0;
+            IsRunning = false;
+            JumpPressed = false;
+            JumpReleased = false;
+            JumpHeld = false;
+            return;
+        }
+
         MoveInput = UnityEngine.Input.GetAxisRaw("Horizontal");
         IsRunning = UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftShift);
         JumpPressed = UnityEngine.Input.GetButtonDown("Jump");
