@@ -265,6 +265,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool HasSavedProgress()
+    {
+        return gameData.currentLevel > 0;
+    }
+    
+    public int GetLastUnlockedLevel()
+    {
+        return gameData.currentLevel + 1; // Converte para 1-based para exibição
+    }
+    
+    public void StartNewGame()
+    {
+        gameData.currentLevel = 0;
+        gameData.highScore = 0;
+        SaveGame();
+        SceneManager.LoadScene("Level_1");
+        currentState = GameState.Playing;
+        Time.timeScale = 1f;
+    }
+    
+    public void ContinueGame()
+    {
+        SceneManager.LoadScene($"Level_{GetLastUnlockedLevel()}");
+        currentState = GameState.Playing;
+        Time.timeScale = 1f;
+    }
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
