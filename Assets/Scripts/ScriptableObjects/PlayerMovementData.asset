@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 8
-  acceleration: 20
+  acceleration: 50
   deceleration: 30
   airControlFactor: 0.5
   groundCheckDistance: 0.88

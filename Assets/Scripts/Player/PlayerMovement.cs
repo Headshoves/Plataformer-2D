@@ -25,6 +25,7 @@ public class PlayerMovement
     // Estados do movimento
     private bool isGrounded;               // Indica se está no chão
     private int jumpCount;                 // Contador de pulos realizados
+    public int JumpCount => jumpCount;
     private float currentSpeed;            // Velocidade atual
     private float coyoteTimeCounter;       // Contador do coyote time
     private float jumpBufferCounter;       // Contador do buffer de pulo
@@ -114,6 +115,12 @@ public class PlayerMovement
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, data.jumpForce);
         jumpCount++;
         coyoteTimeCounter = 0f;
+        
+        // Reset double jump trigger if we're doing a regular jump
+        if (jumpCount == 1 && controller.GetComponent<Animator>() != null)
+        {
+            controller.GetComponent<Animator>().ResetTrigger("IsDoubleJumping");
+        }
     }
 
     private void CheckGround()

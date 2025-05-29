@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     
     public int Score => score;
     public int Health => health.CurrentHealth;
+    public PlayerMovement Movement => movement;
     
     private void Awake()
     {
